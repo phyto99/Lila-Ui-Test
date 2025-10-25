@@ -48,7 +48,7 @@ jobs:
       - run: cd target/universal/stage && tar --zstd -cvpf ../../../lila-3.0.tar.zst . && cd -
         env:
           ZSTD_LEVEL: 1 # most files are already zipped
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: lila-server
           path: lila-3.0.tar.zst
