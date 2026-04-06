@@ -202,6 +202,76 @@
       background-color: #3e3e3e;
       color: #fff;
     }
+
+    .appearance {
+      padding: 0 1rem 0.25rem;
+    }
+
+    .appearance-divider {
+      border: none;
+      border-top: $border;
+      margin: 0.4rem -1rem 0.6rem;
+    }
+
+    .app-slider {
+      margin-bottom: 0.5rem;
+
+      label {
+        display: block;
+        font-size: 0.78em;
+        color: var(--c-font-dim);
+        margin-bottom: 0.15rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .range {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+      }
+
+      .stop-labels {
+        position: relative;
+        height: 1.4em;
+        margin-top: 0.1rem;
+
+        button {
+          position: absolute;
+          transform: translateX(-50%);
+          font-size: 0.68em;
+          padding: 0;
+          background: none;
+          border: none;
+          color: var(--c-font-dimmer);
+          cursor: pointer;
+          white-space: nowrap;
+          line-height: 1;
+
+          &:first-child { transform: translateX(0); }
+          &:last-child  { transform: translateX(-100%); }
+
+          &:hover {
+            color: var(--c-font);
+          }
+        }
+      }
+    }
+
+    .color-swatches {
+      display: flex;
+      gap: 3px;
+      margin-top: 0.4rem;
+      margin-bottom: 0.1rem;
+
+      .swatch {
+        flex: 1;
+        height: 18px;
+        border-radius: 3px;
+        border: 1px solid rgba(128, 128, 128, 0.2);
+      }
+    }
   }
 
   .piece .list {

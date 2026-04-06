@@ -2,6 +2,7 @@ import type { Package } from './parse.ts';
 import fs from 'node:fs';
 import ps from 'node:process';
 import { join, resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { definedUnique, isEquivalent } from './algo.ts';
 import { updateManifest } from './manifest.ts';
 import { taskOk } from './task.ts';
@@ -9,7 +10,7 @@ import { taskOk } from './task.ts';
 // state, logging, status
 
 export const env = new (class {
-  readonly rootDir = resolve(dirname(new URL(import.meta.url).pathname), '../../..');
+  readonly rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
   readonly uiDir = join(this.rootDir, 'ui');
   readonly outDir = join(this.rootDir, 'public');
   readonly cssOutDir = join(this.outDir, 'css');
