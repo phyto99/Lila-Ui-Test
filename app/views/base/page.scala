@@ -94,7 +94,8 @@ object page:
           lichessFontFaceCss,
           pieceSetImages.load(ctx.pref.currentPieceSet.name),
           (ctx.pref.bg === lila.pref.Pref.Bg.SYSTEM || ctx.impersonatedBy.isDefined)
-            .so(systemThemeScript(ctx.nonce))
+            .so(systemThemeScript(ctx.nonce)),
+          appearanceScript(ctx.nonce)
         ),
         st.body(
           cls := {

@@ -33,6 +33,54 @@ final class layout(helpers: Helpers, assetHelper: lila.web.ui.AssetFullHelper)(
       "if (window.matchMedia('(prefers-color-scheme: light)')?.matches) " +
         "document.documentElement.classList.add('light');"
     )(nonce)
+  def appearanceScript(nonce: Option[Nonce]) =
+    embedJsUnsafe("""(function(){
+var tint=parseInt(localStorage.getItem('dasher.tint')||'50');
+var brightness=parseInt(localStorage.getItem('dasher.brightness')||'33');
+function lerp(a,b,t){return a+(b-a)*Math.max(0,Math.min(1,t));}
+function mkHsl(h,s,l){return 'hsl('+Math.round(h)+','+Math.round(Math.max(0,s))+'%,'+Math.max(0,Math.min(100,l)).toFixed(1)+'%)';}
+var t=tint/100;
+var satScale=Math.abs(t-0.5)*2;
+var bgHue=t<0.5?37:220;
+var bgSat=7*satScale;
+var pageSat=t<0.5?lerp(10,0,t*2):lerp(0,9,(t-0.5)*2);
+var zebraSat=5*satScale;
+var bHue=t<0.5?0:220;
+var bSat=t<0.5?0:lerp(0,3,(t-0.5)*2);
+function lerpB(a,b,u){return{bgL:lerp(a.bgL,b.bgL,u),pageL:lerp(a.pageL,b.pageL,u),lowL:lerp(a.lowL,b.lowL,u),zebraL:lerp(a.zebraL,b.zebraL,u),zebra2L:lerp(a.zebra2L,b.zebra2L,u),borderL:lerp(a.borderL,b.borderL,u),borderPageL:lerp(a.borderPageL,b.borderPageL,u)};}
+var BA={bgL:3,pageL:1,lowL:7,zebraL:4,zebra2L:6,borderL:14,borderPageL:10};
+var BD={bgL:14,pageL:8,lowL:22,zebraL:19,zebra2L:24,borderL:25,borderPageL:22};
+var BH={bgL:32,pageL:22,lowL:40,zebraL:30,zebra2L:36,borderL:42,borderPageL:38};
+var BL={bgL:100,pageL:92,lowL:89,zebraL:96.5,zebra2L:92,borderL:85,borderPageL:80};
+var bs=brightness<=33?lerpB(BA,BD,brightness/33):brightness<=66?lerpB(BD,BH,(brightness-33)/33):lerpB(BH,BL,(brightness-66)/34);
+var isLight=brightness>=66;
+var satFade=isLight?Math.max(0,1-(bs.bgL-80)/20):1;
+var eB=bgSat*satFade,eP=pageSat*satFade,eZ=zebraSat*satFade;
+var fontL=isLight?lerp(73,30,(brightness-75)/25):73;
+var root=document.documentElement;
+var vars={
+'--c-bg':mkHsl(bgHue,eB,bs.bgL),'--c-bg-box':mkHsl(bgHue,eB,bs.bgL),'--c-bg-high':mkHsl(bgHue,eB,bs.bgL),'--c-bg-opaque':mkHsl(bgHue,eB,bs.bgL),
+'--c-bg-page':mkHsl(bgHue,eP,bs.pageL),'--c-bg-low':mkHsl(bgHue,eB,bs.lowL),'--c-bg-popup':mkHsl(bgHue,eB,bs.lowL),'--c-bg-header-dropdown':mkHsl(bgHue,eB,bs.lowL),
+'--c-bg-zebra':mkHsl(bgHue,eZ,bs.zebraL),'--c-bg-zebra2':mkHsl(bgHue,eZ,bs.zebra2L),'--c-bg-input':mkHsl(bgHue,eP,isLight?98:13),
+'--c-bg-variation':isLight?mkHsl(bgHue,eZ,bs.zebra2L):mkHsl(bgHue,Math.round(eB*0.7),bs.bgL+1),
+'--c-body-gradient':mkHsl(bgHue,eB+2,bs.bgL+2),
+'--c-metal-top':mkHsl(bgHue,eB,bs.lowL),'--c-metal-bottom':mkHsl(bgHue,eB*0.7,Math.max(0,bs.lowL-3)),
+'--c-metal-top-hover':mkHsl(bgHue,eB,bs.lowL+3),'--c-metal-bottom-hover':mkHsl(bgHue,eB*0.7,bs.lowL),
+'--c-border':mkHsl(bHue,bSat,bs.borderL),'--c-border-page':mkHsl(bHue,bSat*0.7,bs.borderPageL),
+'--c-border-light':mkHsl(bHue,bSat*0.5,isLight?80:bs.bgL+26),'--c-border-tour':mkHsl(bHue,bSat*0.5,lerp(bs.borderPageL,bs.pageL,0.5)),
+'--c-page-input':mkHsl(bgHue,eB,isLight?bs.lowL:bs.bgL),
+'--c-pool-button':'hsla('+Math.round(bgHue)+','+Math.round(eB)+'%,'+bs.bgL.toFixed(1)+'%,0.66)',
+'--c-font':'hsl(0,0%,'+fontL.toFixed(1)+'%)','--c-font-dim':'hsl(0,0%,'+(isLight?47:58)+'%)',
+'--c-font-dimmer':'hsl(0,0%,'+(isLight?70:42)+'%)','--c-font-clear':'hsl(0,0%,'+(isLight?12:80)+'%)',
+'--c-font-clearer':'hsl(0,0%,'+(isLight?0:89)+'%)','--c-font-page':'hsl(0,0%,'+(isLight?37:58)+'%)',
+'--c-header-dropdown':'hsl(0,0%,'+fontL.toFixed(1)+'%)','--c-shade':'hsl(0,0%,'+(isLight?84:30)+'%)',
+'--c-dark':'hsl(0,0%,'+(isLight?80:20)+'%)','--c-dimmer':isLight?'#fff':'#000','--c-clearer':isLight?'#000':'#fff',
+'--c-over':isLight?'#000':'#fff','--c-page-mask':isLight?'hsla(0,0%,100%,0.5)':'hsla(0,0%,0%,0.6)',
+'--c-font-shadow':isLight?'#fff':'hsla(0,0%,0%,0)'
+};
+for(var k in vars)root.style.setProperty(k,vars[k]);
+if(root.className!=='transp'){root.className=isLight?'light':'dark';document.body&&(document.body.dataset.theme=isLight?'light':'dark');}
+})();""")(nonce)
   val noTranslate = raw("""<meta name="google" content="notranslate">""")
 
   def preload(href: String, as: String, crossorigin: Boolean, tpe: Option[String] = None) =
