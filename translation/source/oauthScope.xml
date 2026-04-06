@@ -16,7 +16,7 @@
   <string name="challengeBulk">Create many games at once for other players</string>
   <string name="studyRead">Read private studies and broadcasts</string>
   <string name="studyWrite">Create, update, delete studies and broadcasts</string>
-  <string name="tournamentWrite">Create, update, and join tournaments</string>
+  <string name="sessionWrite">Create, update, and join sessions</string>
   <string name="racerWrite">Create and join puzzle races</string>
   <string name="puzzleRead">Read puzzle activity</string>
   <string name="teamRead">Read private team information</string>

@@ -24,7 +24,7 @@
   <string name="perk1">Get a flaming streamer icon on your Lichess profile.</string>
   <string name="perk2">Get bumped up to the top of the streamers list.</string>
   <string name="perk3">Notify your Lichess followers.</string>
-  <string name="perk4">Show your stream in your games, tournaments and studies.</string>
+  <string name="perk4">Show your stream in your games, sessions and studies.</string>
   <string name="approved">Your stream is approved.</string>
   <string name="pendingReview">Your stream is being reviewed by moderators.</string>
   <string name="pleaseFillIn">Please fill in your streamer information, and upload a picture.</string>
